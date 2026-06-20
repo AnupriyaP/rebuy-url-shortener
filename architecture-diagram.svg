@@ -1,0 +1,68 @@
+<svg width="680" height="440" viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Rebuy Links high-level architecture</title>
+<desc>A browser client talks to the Spring Boot application. Inside the app, the controller layer calls a service layer, which reads and writes to PostgreSQL and uses Redis as a cache in front of it.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#444441" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.th { font-size: 14px; font-weight: 500; }
+.ts { font-size: 12px; }
+.box { fill: #F1EFE8; stroke: #5F5E5A; stroke-width: 0.5; }
+.gray-text { fill: #2C2C2A; }
+.gray-sub { fill: #444441; }
+.purple { fill: #EEEDFE; stroke: #534AB7; stroke-width: 0.5; }
+.purple-text { fill: #26215C; }
+.purple-sub { fill: #3C3489; }
+.blue { fill: #E6F1FB; stroke: #185FA5; stroke-width: 0.5; }
+.blue-text { fill: #042C53; }
+.blue-sub { fill: #0C447C; }
+.teal { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 0.5; }
+.teal-text { fill: #04342C; }
+.teal-sub { fill: #085041; }
+.coral { fill: #FAECE7; stroke: #993C1D; stroke-width: 0.5; }
+.coral-text { fill: #4A1B0C; }
+.coral-sub { fill: #712B13; }
+</style>
+
+<rect width="680" height="440" fill="#ffffff"/>
+
+<rect class="box" x="270" y="30" width="140" height="56" rx="8"/>
+<text class="th gray-text" x="340" y="48" text-anchor="middle" dominant-baseline="central">Browser client</text>
+<text class="ts gray-sub" x="340" y="66" text-anchor="middle" dominant-baseline="central">UI form / redirects</text>
+
+<line x1="340" y1="86" x2="340" y2="124" stroke="#444441" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<rect class="purple" x="60" y="126" width="560" height="180" rx="20"/>
+<text class="th purple-text" x="80" y="156">Spring Boot app</text>
+<text class="ts purple-sub" x="80" y="174">Single container</text>
+
+<rect class="blue" x="90" y="200" width="160" height="56" rx="10"/>
+<text class="th blue-text" x="170" y="218" text-anchor="middle" dominant-baseline="central">Controller</text>
+<text class="ts blue-sub" x="170" y="236" text-anchor="middle" dominant-baseline="central">routes, validation</text>
+
+<line x1="250" y1="228" x2="288" y2="228" stroke="#185FA5" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<rect class="blue" x="290" y="200" width="160" height="56" rx="10"/>
+<text class="th blue-text" x="370" y="218" text-anchor="middle" dominant-baseline="central">Service</text>
+<text class="ts blue-sub" x="370" y="236" text-anchor="middle" dominant-baseline="central">business logic</text>
+
+<line x1="450" y1="228" x2="488" y2="228" stroke="#185FA5" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<rect class="blue" x="490" y="200" width="110" height="56" rx="10"/>
+<text class="th blue-text" x="545" y="218" text-anchor="middle" dominant-baseline="central">Repository</text>
+<text class="ts blue-sub" x="545" y="236" text-anchor="middle" dominant-baseline="central">Spring Data JPA</text>
+
+<line x1="370" y1="306" x2="370" y2="344" stroke="#444441" stroke-width="0.5" marker-end="url(#arrow)"/>
+<line x1="545" y1="306" x2="545" y2="344" stroke="#444441" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<rect class="teal" x="290" y="346" width="160" height="56" rx="10"/>
+<text class="th teal-text" x="370" y="364" text-anchor="middle" dominant-baseline="central">Redis</text>
+<text class="ts teal-sub" x="370" y="382" text-anchor="middle" dominant-baseline="central">cache, hash to URL</text>
+
+<rect class="coral" x="470" y="346" width="160" height="56" rx="10"/>
+<text class="th coral-text" x="550" y="364" text-anchor="middle" dominant-baseline="central">PostgreSQL</text>
+<text class="ts coral-sub" x="550" y="382" text-anchor="middle" dominant-baseline="central">shortened_urls table</text>
+
+</svg>

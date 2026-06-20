@@ -4,6 +4,8 @@ A production-grade URL shortener built for Rebuy's product recommendation
 link campaigns. Shortens long tracking URLs into clean 4-character links — designed to enter the market quickly while
 making deliberate, defensible engineering tradeoffs along the way.
 
+![Rebuy Links UI](./ui-screenshot.png)
+
 ---
 
 ## Setup Instructions
@@ -157,6 +159,20 @@ Interactive docs (Swagger UI) live at `/swagger-ui.html`, generated
 automatically from controller annotations via springdoc-openapi. The
 frontend's static file-serving route is excluded from the generated docs
 via `@Hidden` since it isn't a real API operation.
+
+![Swagger UI](./swagger-screenshot.png)
+
+---
+
+## High-Level Architecture
+
+![High-level architecture](./architecture-diagram.svg)
+
+---
+
+## Request Flow
+
+![Request flow diagram](./flow-diagram.svg)
 
 ---
 
