@@ -418,6 +418,41 @@ disrupting the current API.
 
 ---
 
+## Possible Future Enhancements
+
+Beyond what's covered in "Known Limitations" and "What Was Deliberately
+Left Out" above, a few specific features came up as natural next steps
+for a v2:
+
+**Richer click analytics — geolocation and device.** Hit counting is
+already implemented (`access_count`, `/api/stats/{hash}`). Geolocation
+and device breakdown would require a new `click_events` table (one row
+per click, not just a running counter), an IP geolocation lookup (e.g.
+MaxMind GeoLite2), and User-Agent parsing on the redirect path. This is
+a schema change plus a new external dependency, not a config tweak —
+appropriately scoped as a v2 item.
+
+**Custom aliases.** Letting a user choose `/myblog` instead of a random
+4-character hash is the most "Bitly-like" feature missing from this MVP.
+It's a contained addition — an optional field on `ShortenRequest`, a
+collision check against `existsByHash()`, and relaxing the redirect
+route's `^[a-zA-Z0-9]{4}$` regex to allow longer aliases — but is more
+valuable once paired with user accounts, since an alias is really
+something a specific user "owns" and should be able to manage or release.
+
+**Expiration time for links.** Would need a nullable `expires_at` column,
+a check in `resolve()` returning `410 Gone` for expired hashes, and
+ideally a scheduled cleanup job to delete expired rows rather than
+leaving them inert in the table indefinitely.
+
+**User accounts for managing URLs.** This is the same authentication
+work already described in "What Was Deliberately Left Out" — JWT auth,
+a `users` table, `created_by` ownership on `shortened_urls`, and a real
+`GET /api/my-links` endpoint. Custom aliases and expiration both become
+meaningfully more useful once this exists, since "my link, my alias, my
+expiration policy" only makes sense once there's a concept of "mine."
+---
+
 ## Project Structure
 
 ```
