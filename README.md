@@ -276,6 +276,8 @@ schema automatically on startup. Once a migration has run anywhere, it is
 **never edited** — further changes go in new versioned migrations, which
 is why the column-type fix is `V2` rather than a rewrite of `V1`.
 
+---
+
 ## Logging
 
 Uses SLF4J with Logback (Spring Boot's default logging backend). All
@@ -298,6 +300,51 @@ ERROR → failures requiring attention, always logged with the full
 logic or branching, so per-request logging would add noise without
 diagnostic value; any failure there is still caught by the global
 exception handler.
+
+---
+
+## Monitoring
+
+Spring Boot Actuator is enabled and exposes two endpoints:
+
+```
+GET /actuator/health   → UP/DOWN status for the app itself, the
+                          PostgreSQL connection, the Redis connection,
+                          and disk space — what a load balancer or
+                          orchestrator would poll to decide whether to
+                          route traffic to this instance.
+
+GET /actuator/metrics   → JVM memory, HTTP request counts/latencies,
+                          datasource connection pool stats, and more,
+                          via Micrometer (already on the classpath
+                          transitively through spring-boot-starter-actuator).
+                          Drill into a specific metric with
+                          /actuator/metrics/{name}, e.g.
+                          /actuator/metrics/http.server.requests.
+```
+
+Docker Compose's healthcheck on the `app` service polls `/actuator/health`
+directly, so an unhealthy container is automatically detected and can be
+restarted.
+
+**Not included:** centralized log aggregation, dashboards, or alerting.
+At this scale — a single instance, no horizontal scaling — `/actuator/health`
+and `/actuator/metrics` already answer the questions monitoring exists to
+answer here: is the app alive, and can it reach its dependencies.
+
+At production scale I'd use:
+- **CloudWatch** (Logs + Metrics + Alarms) if deployed on AWS — minimal
+  setup since ECS/EKS ship container stdout to CloudWatch Logs natively,
+  and Actuator's metrics can be pushed via the CloudWatch Micrometer
+  registry with no extra infrastructure to run.
+- **ELK / Kibana** if I need richer log search and visualization across
+  multiple instances — Logback can be configured to emit JSON-structured
+  logs that Logstash/Filebeat ship into Elasticsearch, with Kibana on top
+  for dashboards and saved searches.
+
+Either path is a configuration change, not an architecture change — the
+app already emits structured logs and exposes metrics via Actuator;
+what's missing is only the shipping/aggregation layer on top.
 
 ---
 
