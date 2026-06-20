@@ -101,7 +101,7 @@ Content-Type: application/json
 { "url": "https://your-long-url.com/..." }
 ```
 Response (`201 Created`):
-```/api/v1/stats/
+```json
 {
   "originalUrl": "https://your-long-url.com/...",
   "shortUrl": "http://localhost:8080/aB3x",
@@ -127,7 +127,7 @@ curl -i http://localhost:8080/{hash}
 
 ### Get Click Stats
 ```
-GET /api/stats/{hash}
+GET /api/v1/stats/{hash}
 ```
 Response (`200 OK`):
 ```json
@@ -258,7 +258,7 @@ would accumulate many different short links, fragmenting click analytics
 across them.
 
 ### 5. Per-IP Rate Limiting
-`POST /api/shorten` is rate limited to 10 requests/minute per IP via
+`POST /api/v1/shorten` is rate limited to 10 requests/minute per IP via
 Bucket4j's token bucket algorithm, protecting against scripted abuse that
 could exhaust the finite hash space.
 
@@ -413,7 +413,7 @@ task's literal requirement was a single-URL form, and bulk upload is a
 fundamentally different interaction pattern that mature products add once
 they have high-volume enterprise customers. If needed later, the existing
 `shorten()` service method already handles one URL cleanly and could be
-called in a loop behind a new `POST /api/shorten/bulk` endpoint without
+called in a loop behind a new `POST /api/v1/shorten/bulk` endpoint without
 disrupting the current API.
 
 ---
@@ -425,7 +425,7 @@ Left Out" above, a few specific features came up as natural next steps
 for a v2:
 
 **Richer click analytics — geolocation and device.** Hit counting is
-already implemented (`access_count`, `/api/stats/{hash}`). Geolocation
+already implemented (`access_count`, `/api/v1/stats/{hash}`). Geolocation
 and device breakdown would require a new `click_events` table (one row
 per click, not just a running counter), an IP geolocation lookup (e.g.
 MaxMind GeoLite2), and User-Agent parsing on the redirect path. This is
@@ -448,7 +448,7 @@ leaving them inert in the table indefinitely.
 **User accounts for managing URLs.** This is the same authentication
 work already described in "What Was Deliberately Left Out" — JWT auth,
 a `users` table, `created_by` ownership on `shortened_urls`, and a real
-`GET /api/my-links` endpoint. Custom aliases and expiration both become
+`GET /api/v1/my-links` endpoint. Custom aliases and expiration both become
 meaningfully more useful once this exists, since "my link, my alias, my
 expiration policy" only makes sense once there's a concept of "mine."
 
