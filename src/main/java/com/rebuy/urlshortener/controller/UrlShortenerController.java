@@ -34,7 +34,7 @@ public class UrlShortenerController {
             summary = "Shorten a URL",
             description = "Takes a long URL and returns a 4-character short URL"
     )
-    @PostMapping("/api/shorten")
+    @PostMapping("/api/v1/shorten")
     public ResponseEntity<UrlDtos.ShortenResponse> shorten(
             @Valid @RequestBody UrlDtos.ShortenRequest request,
             HttpServletRequest httpRequest) {
@@ -91,7 +91,7 @@ public class UrlShortenerController {
     }
 
     /**
-     * GET /api/stats/{hash}
+     * GET /api/v1/stats/{hash}
      * Returns click analytics for a short URL.
      * Used by marketing team to measure campaign performance.
      */
@@ -99,7 +99,7 @@ public class UrlShortenerController {
             summary = "Get URL statistics",
             description = "Returns click count and other stats for a short URL"
     )
-    @GetMapping("/api/stats/{hash}")
+    @GetMapping("/api/v1/stats/{hash}")
     public ResponseEntity<UrlDtos.StatsResponse> stats(
             @PathVariable String hash) {
 

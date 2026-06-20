@@ -450,7 +450,7 @@
 
       setLoading(true);
       try {
-        const res = await fetch('/api/shorten', {
+        const res = await fetch('/api/v1/shorten', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url })
@@ -503,7 +503,7 @@
 
     async function fetchStats(hash) {
       try {
-        const res = await fetch('/api/stats/' + hash);
+        const res = await fetch('/api/v1/stats/' + hash);
         if (res.ok) {
           const stats = await res.json();
           const el = document.getElementById('statClicks');
@@ -594,7 +594,7 @@
 
     function refreshAllHistoryClicks() {
       recentLinks.forEach(item => {
-        fetch('/api/stats/' + item.hash)
+        fetch('/api/v1/stats/' + item.hash)
           .then(res => res.ok ? res.json() : null)
           .then(stats => {
             const el = document.getElementById('clicks-' + item.hash);

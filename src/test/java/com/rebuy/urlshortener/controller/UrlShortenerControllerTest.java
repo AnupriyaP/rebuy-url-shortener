@@ -41,16 +41,16 @@ class UrlShortenerControllerTest {
         repository.deleteAll();
     }
 
-    // ── POST /api/shorten ─────────────────────────────────────
+    // ── POST /api/v1/shorten ─────────────────────────────────────
 
     @Test
-    @DisplayName("POST /api/shorten — 201 for valid URL")
+    @DisplayName("POST /api/v1/shorten — 201 for valid URL")
     void shortenValidUrl() throws Exception {
         var request = new UrlDtos.ShortenRequest(
                 "https://www.amazon.com/product/123"
         );
 
-        mockMvc.perform(post("/api/shorten")
+        mockMvc.perform(post("/api/v1/shorten")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -63,20 +63,20 @@ class UrlShortenerControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/shorten — same URL returns same hash (idempotent)")
+    @DisplayName("POST /api/v1/shorten — same URL returns same hash (idempotent)")
     void shortenSameUrlTwiceReturnsIdenticalHash() throws Exception {
         var request = new UrlDtos.ShortenRequest(
                 "https://www.rebuy.com/product/456"
         );
         String body = objectMapper.writeValueAsString(request);
 
-        String response1 = mockMvc.perform(post("/api/shorten")
+        String response1 = mockMvc.perform(post("/api/v1/shorten")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
-        String response2 = mockMvc.perform(post("/api/shorten")
+        String response2 = mockMvc.perform(post("/api/v1/shorten")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated())
@@ -92,11 +92,11 @@ class UrlShortenerControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/shorten — 400 for blank URL")
+    @DisplayName("POST /api/v1/shorten — 400 for blank URL")
     void shortenBlankUrl() throws Exception {
         var request = new UrlDtos.ShortenRequest("");
 
-        mockMvc.perform(post("/api/shorten")
+        mockMvc.perform(post("/api/v1/shorten")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -104,11 +104,11 @@ class UrlShortenerControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/shorten — 400 for URL without https")
+    @DisplayName("POST /api/v1/shorten — 400 for URL without https")
     void shortenInvalidScheme() throws Exception {
         var request = new UrlDtos.ShortenRequest("ftp://some-server.com");
 
-        mockMvc.perform(post("/api/shorten")
+        mockMvc.perform(post("/api/v1/shorten")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -157,13 +157,13 @@ class UrlShortenerControllerTest {
     // ── GET /api/stats/{hash} ─────────────────────────────────
 
     @Test
-    @DisplayName("GET /api/stats/{hash} — returns stats")
+    @DisplayName("GET /api/v1/stats/{hash} — returns stats")
     void statsValidHash() throws Exception {
         repository.save(buildEntity(
                 "Zq1w", "https://shop.com/product/789"
         ));
 
-        mockMvc.perform(get("/api/stats/Zq1w"))
+        mockMvc.perform(get("/api/v1/stats/Zq1w"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.hash").value("Zq1w"))
                 .andExpect(jsonPath("$.originalUrl")
@@ -174,9 +174,9 @@ class UrlShortenerControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/stats/{hash} — 404 for unknown hash")
+    @DisplayName("GET /api/v1/stats/{hash} — 404 for unknown hash")
     void statsUnknownHash() throws Exception {
-        mockMvc.perform(get("/api/stats/zzzz"))
+        mockMvc.perform(get("/api/v1/stats/zzzz"))
                 .andExpect(status().isNotFound());
     }
 

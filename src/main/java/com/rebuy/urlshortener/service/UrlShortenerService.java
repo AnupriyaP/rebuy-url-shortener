@@ -35,7 +35,6 @@ public class UrlShortenerService {
      * Shorten a URL.
      *
      * Idempotent — same URL always returns same hash.
-     * Why: marketing teams often submit same URL multiple times.
      * Without idempotency, same URL gets hundreds of different hashes.
      */
     @Transactional

@@ -95,13 +95,13 @@ src/test/java/.../controller/UrlShortenerControllerTest.java — integration (Mo
 
 ### Shorten a URL
 ```
-POST /api/shorten
+POST /api/v1/shorten
 Content-Type: application/json
 
 { "url": "https://your-long-url.com/..." }
 ```
 Response (`201 Created`):
-```json
+```/api/v1/stats/
 {
   "originalUrl": "https://your-long-url.com/...",
   "shortUrl": "http://localhost:8080/aB3x",
